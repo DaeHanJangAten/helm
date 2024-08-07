@@ -1,0 +1,46 @@
+name: Helm Deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'smartoffice2.2/qa/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout main branch
+      uses: actions/checkout@v2
+      with:
+        ref: main
+
+    - name: Set up Helm
+      uses: azure/setup-helm@v1
+      with:
+        version: v3.5.4
+
+    - name: Package Helm Chart
+      run: helm package ./smartoffice2.2/qa -d smartoffice2.2/qa/packages
+
+    - name: Checkout charts branch
+      uses: actions/checkout@v2
+      with:
+        ref: charts
+        path: charts
+
+    - name: Copy packages to charts
+      run: |
+        mkdir -p charts/smartoffice2.2/packages
+        cp -r smartoffice2.2/qa/packages/* charts/smartoffice2.2/packages/
+
+    - name: Update Helm Repo Index
+      run: |
+        helm repo index charts/smartoffice2.2/packages --url https://DaeHanJangAten.github.io/helm/smartoffice2.2/packages
+        cd charts
+        git add smartoffice2.2/packages
+        git commit -m "Update index.yaml and add new chart"
+        git push origin charts
+
