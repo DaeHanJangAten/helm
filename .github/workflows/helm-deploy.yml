@@ -49,4 +49,4 @@ jobs:
         git commit -m "Update index.yaml and add new chart"
         git push origin charts
       env:
-        GH_TOKEN: "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"
+        GH_TOKEN: ${{ secrets.GH_PAT }}
