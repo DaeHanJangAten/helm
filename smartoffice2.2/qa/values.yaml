@@ -1,0 +1,33 @@
+namespace: k8s
+useTLS: true
+useDomain: true
+
+application:
+  smartoffice:
+    image: smartoffice2.kr.ncr.ntruss.com/core:dev-ecc39d8cfa774017d0d414ca0e3661c1f2b56ac4
+    port: 8080
+  room:
+    image: smartoffice2.kr.ncr.ntruss.com/room:dev-30b418628f6eb280e2567cd12feea024ec5b622e
+    port: 8081
+
+db:
+  image: smartoffice2.kr.ncr.ntruss.com/db:dev-aff62f8663604e42fa5aaf820e49495625cea3a9
+  port: 3306
+
+nginx:
+  domain: k8s.sorioffice.com
+  tls:
+    name: tls-secret
+    crt: k8s.pem
+    key: k8s.key
+
+nfs:
+  basePath: /n2529818_atenk8skr2
+  server: 169.254.84.60
+
+registry:
+  name: "registry-secret"
+  config: "registry/config.json"
+
+
+

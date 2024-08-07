@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: application-deployment
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: application
+  template:
+    metadata:
+      labels:
+        app: application
+    spec:
+      imagePullSecrets:
+      - name: registry-secret
+      initContainers:
+      - name: wait-for-db
+        image: busybox
+        command: ["sh", "-c", "until nslookup db-service.{{ .Values.namespace }}.svc.cluster.local; do echo waiting for db; sleep 60; done"]
+        #command: ["sh", "-c", {{- if .Values.dbHost }} "until echo > /dev/tcp/{{ .Values.dbHost }}/{{ .Values.dbPort }}; do echo 'waiting for db'; sleep 60; done" {{- else }} "until nslookup db-service.{{ .Values.namespace }}.svc.cluster.local; do echo 'waiting for db'; sleep 60; done" {{- end }} ]
+      containers:
+      - name: smartoffice-container
+        image: {{ .Values.application.smartoffice.image }}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: {{ .Values.application.smartoffice.port }}
+        env:
+        - name: DB_HOST
+          #value: db-service.{{ .Values.namespace }}.svc.cluster.local
+          value: {{ .Values.dbHost | default (printf "db-service.%s.svc.cluster.local" .Values.namespace) }}
+        - name: DB_PORT
+          value: "3306"
+        volumeMounts:
+        - name: nfs-storage
+          mountPath: /home/atensys/app/data
+        resources:
+          requests:
+            memory: "500Mi"
+            cpu: "0.5" # 요청 CPU
+          limits:
+            memory: "2Gi" # 메모리 제한 
+            cpu: "2" # CPU 제한
+      - name: room-container
+        image: {{ .Values.application.room.image }}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: {{ .Values.application.room.port }}
+        env:
+        - name: DB_HOST
+          #value: db-service.{{ .Values.namespace }}.svc.cluster.local
+          value: {{ .Values.dbHost | default (printf "db-service.%s.svc.cluster.local" .Values.namespace) }}
+        - name: DB_PORT
+          value: "3306"
+        volumeMounts:
+        - name: nfs-storage
+          mountPath: /home/atensys/app/data
+        resources:
+          requests:
+            memory: "500Mi"
+            cpu: "0.5" # 요청 CPU
+          limits:
+            memory: "1Gi" # 메모리 제한
+            cpu: "2" # CPU 제한
+      volumes:
+      - name: nfs-storage
+        persistentVolumeClaim:
+          claimName: application-nfs-pvc
+

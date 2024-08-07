@@ -1,0 +1,6 @@
+apiVersion: v2
+name: smartoffice-qa
+description: atensystem smartoffice QA chart
+version: 1.0.0
+appVersion: 2.2.0
+

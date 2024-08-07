@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-deployment
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      imagePullSecrets:
+      - name: registry-secret
+      containers:
+      - name: db-container
+        image: {{ .Values.db.image }}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: {{ .Values.db.port }}
+        volumeMounts:
+        - name: db-storage
+          mountPath: /var/lib/mysql
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/bash", "-c", "mysql -uroot -p$MYSQL_ROOT_PASSWORD -e 'SHUTDOWN;'"]
+      volumes:
+      - name: db-storage
+        persistentVolumeClaim:
+          claimName: db-nfs-pvc
+

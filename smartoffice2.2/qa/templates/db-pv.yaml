@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Values.namespace }}-db-nfs-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: {{ .Values.nfs.basePath }}/{{ .Values.namespace }}/db
+    server: 169.254.84.60
+  mountOptions:
+    - resvport
+  storageClassName: nks-block-storage
+

@@ -1,0 +1,44 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Values.namespace }}-app-ingress
+  namespace: {{ .Values.namespace }}
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($request_uri ~* "^/$") {
+        rewrite ^(/)$ /front/login.do permanent;
+      }
+    nginx.ingress.kubernetes.io/proxy-body-size: "256M"
+spec:
+  ingressClassName: nginx
+  rules:
+  {{- if .Values.useDomain }}
+  - host: {{ .Values.nginx.domain }}
+    http:
+      paths:
+  {{- else }}
+  - http:
+      paths:
+  {{- end }}
+      - path: /room(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: application-service
+            port:
+              number: {{ .Values.application.room.port }}
+      - path: /(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: application-service
+            port:
+              number: {{ .Values.application.smartoffice.port }}
+  {{- if .Values.useTLS }}
+  tls:
+  - hosts:
+    - {{ .Values.nginx.domain }}
+    secretName: {{ .Values.nginx.tls.name }}
+  {{- end }}
+
