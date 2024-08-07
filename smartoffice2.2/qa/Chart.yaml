@@ -1,6 +1,6 @@
 apiVersion: v2
 name: qa
-description: atensystem smartoffice2.2 qa chart test
+description: atensystem smartoffice2.2 qa chart
 version: 1.0.0
 appVersion: 2.2.0
 
