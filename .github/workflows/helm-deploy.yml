@@ -31,6 +31,11 @@ jobs:
         ref: charts
         path: charts
 
+    - name: Set up Git user
+      run: |
+        git config --global user.email "83393841+DaeHanJangAten@users.noreply.github.com"
+        git config --global user.name "DaeHanJangAten"
+
     - name: Copy packages to charts
       run: |
         mkdir -p charts/smartoffice2.2/packages
@@ -43,4 +48,3 @@ jobs:
         git add smartoffice2.2/packages
         git commit -m "Update index.yaml and add new chart"
         git push origin charts
-
