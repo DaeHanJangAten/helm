@@ -3,7 +3,16 @@ entries:
   qa:
   - apiVersion: v2
     appVersion: 2.2.0
-    created: "2024-08-08T04:31:38.904064572Z"
+    created: "2024-08-08T06:21:37.882011395Z"
+    description: 스마트오피스 이미지 버전 업데이트
+    digest: 5453e6be85d77ea6993d2de157e3febf1d28d213d59338abd32921ce8362f98c
+    name: qa
+    urls:
+    - https://daehanjangaten.github.io/helm/qa-1.0.2.tgz
+    version: 1.0.2
+  - apiVersion: v2
+    appVersion: 2.2.0
+    created: "2024-08-08T06:21:37.881538842Z"
     description: atensystem smartoffice2.2 qa chart tES
     digest: cb1a9b91ba170d43448ba1be992656a1a4ed67398e4363f7cc617effa77a98ef
     name: qa
@@ -13,11 +22,11 @@ entries:
   smartoffice-chart:
   - apiVersion: v2
     appVersion: 2.2.0
-    created: "2024-08-08T04:31:38.904705756Z"
+    created: "2024-08-08T06:21:37.883564776Z"
     description: atensystem smartoffice chart
     digest: 7d7bc00f332908c4394e89fd5b0ca138200408d370325b4f24551250744fdcb1
     name: smartoffice-chart
     urls:
     - https://daehanjangaten.github.io/helm/smartoffice-chart-1.0.0.tgz
     version: 1.0.0
-generated: "2024-08-08T04:31:38.90315328Z"
+generated: "2024-08-08T06:21:37.881000626Z"
