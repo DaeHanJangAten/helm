@@ -25,13 +25,18 @@ jobs:
         cd smartoffice2.2/qa
         helm package .
         mkdir -p ../../helm-packages
-        mv smartoffice2.2-qa-*.tgz ../../helm-packages/
+        mv qa-*.tgz ../../helm-packages/
 
     - name: Checkout charts branch
       uses: actions/checkout@v2
       with:
         ref: charts
         path: charts-branch
+
+    - name: Pull latest changes from charts branch
+      run: |
+        cd charts-branch
+        git pull origin charts
 
     - name: Copy packaged chart to charts branch
       run: |
@@ -49,3 +54,4 @@ jobs:
         git push origin charts
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
