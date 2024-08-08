@@ -1,6 +1,6 @@
 apiVersion: v2
 name: qa
-description: atensystem smartoffice2.2 qa chart tES
-version: 1.0.1
+description: 스마트오피스 이미지 버전 업데이트
+version: 1.0.2
 appVersion: 2.2.0
 
